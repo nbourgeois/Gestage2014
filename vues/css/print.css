@@ -1,0 +1,83 @@
+/* 
+    Document   : imprimer.css
+    Created on : 20 juin 2013, 14:41:42
+    Author     : btssio
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+@page{
+    margin:10%;
+}
+u1#gauche{
+    margin:0;
+    border:none;
+}
+#entete{
+    display:none;
+}
+
+#pied{
+    display:none;
+    
+}
+#choix{
+    display:none;
+    
+}
+#tableau{
+    background-color:#fff;
+    font-family:serif;
+    font-size:15pt;
+    display:block;
+    clip:auto;
+    overflow:visible;    
+}
+body { 
+    display:none;
+}
+
+section{
+    display:none;
+}
+
+h1{
+    display:none;
+}
+h1#Titreappli{
+    display:none;
+}
+
+nav{
+   display:none;
+}
+
+nav ul{
+    display:none;
+}
+
+nav li{
+    display:none;
+}
+
+nav a{
+    display:none;
+}
+
+nav a:hover{
+    display:none;
+}
+
+form {
+	display:none;
+}
+label{
+	display:none;
+}
+input,select{
+	display:none;
+}
