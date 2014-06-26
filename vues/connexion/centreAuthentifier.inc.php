@@ -2,6 +2,6 @@
 <!-- $this->message : à afficher sous le formulaire -->
 <h3>Bienvenue sur le site de gestion des stages GestStages</h3>
 <?php
-if (isset($this->getDonnees['message'])) {
-    echo "<strong>" . $this->getDonnees['message'] . "</strong>";
+if (!is_null($this->lireDonnee('message'))) {
+    echo "<strong>" . $this->lireDonnee('message') . "</strong>";
 }

@@ -3,7 +3,7 @@
     <h1 id="Titreappli">GestStage <b style="font-size:10px;" >Version <?php echo VERSION_APPLICATION ?></b></h1>
 
     <?php
-    if (isset($this->getDonnees['loginAuthentification'])) {
+    if (!is_null($this->lireDonnee('loginAuthentification'))) {
         ?>
         <span class="deconnexion" >
             <a href=".?controleur=connexion&action=seDeconnecter">

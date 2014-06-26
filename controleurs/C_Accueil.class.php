@@ -9,10 +9,10 @@ class C_Accueil extends C_ControleurGenerique {
     function defaut() {
         // les fichiers
         $this->vue = new V_Vue("../vues/templates/template.inc.php");
-        $this->vue->getDonnees['centre'] = "../vues/accueil/centreAccueil.inc.php";
+        $this->vue->ajouterDonnee('centre',"../vues/accueil/centreAccueil.inc.php");
         // les données
-        $this->vue->getDonnees['titreVue'] = "GestStage : Accueil";
-        $this->vue->getDonnees['loginAuthentification'] = MaSession::get('login');
+        $this->vue->ajouterDonnee('titreVue',"GestStage : Accueil");
+        $this->vue->ajouterDonnee('loginAuthentification',MaSession::get('login'));
         $this->vue->afficher();
     }
 

@@ -8,8 +8,8 @@
         <input type="password" name="mdp" id="mdp"></input><br/>
         <input type="submit" value="Valider" ></input><br/>
 <?php
-if (isset($this->message)) {
-    echo "<strong>".$this->message."</strong>";
+if (!is_null($this->lireDonnee('message'))) {
+    echo "<strong>".$this->lireDonnee('message')."</strong>";
 }
 ?>
     </fieldset>

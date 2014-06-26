@@ -8,24 +8,46 @@ class V_Vue {
     function __construct($chemin) {
         $this->fichier = $chemin;
         $this->donnees = array();
-        $this->getDonnees['entete'] = "../vues/templates/entete.inc.php";
-        $this->getDonnees['gauche'] = "../vues/templates/gauche.inc.php";
-        $this->getDonnees['pied'] = "../vues/templates/pied.inc.php";
+        // composants par défaut de la vue
+        $this->donnees['entete'] = "../vues/templates/entete.inc.php";
+        $this->donnees['gauche'] = "../vues/templates/gauche.inc.php";
+        $this->donnees['pied'] = "../vues/templates/pied.inc.php";
     }
 
     function afficher() {
         include($this->fichier);
     }
 
-    /* ACCESSEURS */
-
-    public function getFichier() {
-        return $this->fichier;
+    /**
+     * ajouter une information à transmettre à la vue : un couple (nom, valeur)
+     * @param string $nomDonnee : nom de l'information
+     * @param string $valeurDonnee : valeur de l'information
+     */
+    function ajouterDonnee($nomDonnee, $valeurDonnee) {
+        $this->donnees[$nomDonnee] = $valeurDonnee;
     }
 
-    public function getDonnees() {
-        return $this->donnees;
+    /**
+     * retourne valeur d'une information liée à la vue
+     * @param string $nomDonnee : nom de l'information recherchée
+     * @return string : valeur de l'information recherchée ; null sinon
+     */
+    function lireDonnee($nomDonnee) {
+        $retour = null;
+        if (isset($this->donnees[$nomDonnee])) {
+            $retour = $this->donnees[$nomDonnee];
+        }
+        return $retour;
     }
 
+//    /* ACCESSEURS */
+//
+//    public function getFichier() {
+//        return $this->fichier;
+//    }
+//
+//    public function getDonnees() {
+//        return $this->donnees;
+//    }
 
 }
