@@ -8,9 +8,9 @@ class C_Connexion extends C_ControleurGenerique {
      */
     function seConnecter() {
         $this->vue = new V_Vue("../vues/templates/template.inc.php");
-        $this->vue->ajouterDonnee("titreVue","GestStage : Connexion");
+        $this->vue->ecrireDonnee("titreVue","GestStage : Connexion");
         // Centre : formulaire de connexion
-        $this->vue->ajouterDonnee('centre',"../vues/includes/connexion/centreSeConnecterFormulaire.inc.php");
+        $this->vue->ecrireDonnee('centre',"../vues/includes/connexion/centreSeConnecterFormulaire.inc.php");
         $this->vue->afficher();
     }
 
@@ -22,8 +22,8 @@ class C_Connexion extends C_ControleurGenerique {
      */
     function authentifier() {
         $this->vue = new V_Vue("../vues/templates/template.inc.php");
-        $this->vue->ajouterDonnee('titreVue',"GestStage : Accueil");
-        $this->vue->ajouterDonnee('centre',"../vues/includes/connexion/centreAuthentifier.inc.php");
+        $this->vue->ecrireDonnee('titreVue',"GestStage : Accueil");
+        $this->vue->ecrireDonnee('centre',"../vues/includes/connexion/centreAuthentifier.inc.php");
 
 
         //------------------------------------------------------------------------
@@ -42,16 +42,16 @@ class C_Connexion extends C_ControleurGenerique {
 //                $this->vue->getDonnees['message'] = "Authentification r&eacute;ussie";
 //                $this->vue->getDonnees['centre'] = "../vues/connexion/centreAuthentifier.inc.php";
             } else {
-                $this->vue->ajouterDonnee('message',"ECHEC d'identification : login ou mot de passe inconnus ");
-                $this->vue->ajouterDonnee('centre',"../vues/includes/connexion/centreSeConnecterFormulaire.inc.php");
+                $this->vue->ecrireDonnee('message',"ECHEC d'identification : login ou mot de passe inconnus ");
+                $this->vue->ecrireDonnee('centre',"../vues/includes/connexion/centreSeConnecterFormulaire.inc.php");
             }
         } else {
-            $this->vue->ajouterDonnee('message',"Attention : le login ou le mot de passe ne sont pas renseign&eacute;s");
-            $this->vue->ajouterDonnee('centre',"../vues/includes/connexion/centreSeConnecterFormulaire.inc.php");
+            $this->vue->ecrireDonnee('message',"Attention : le login ou le mot de passe ne sont pas renseign&eacute;s");
+            $this->vue->ecrireDonnee('centre',"../vues/includes/connexion/centreSeConnecterFormulaire.inc.php");
         }
         //------------------------------------------------------------------------
 
-        $this->vue->ajouterDonnee('loginAuthentification', MaSession::get('login'));
+        $this->vue->ecrireDonnee('loginAuthentification', MaSession::get('login'));
         $this->vue->afficher();
 
 

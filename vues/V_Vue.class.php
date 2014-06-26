@@ -23,7 +23,7 @@ class V_Vue {
      * @param string $nomDonnee : nom de l'information
      * @param string $valeurDonnee : valeur de l'information
      */
-    function ajouterDonnee($nomDonnee, $valeurDonnee) {
+    function ecrireDonnee($nomDonnee, $valeurDonnee) {
         $this->donnees[$nomDonnee] = $valeurDonnee;
     }
 

@@ -1,52 +1,45 @@
 <?php
 
-class C_Utilisateur extends Controleur{
-    // affichage des coordonnée de l'utilisateur 
-    function coordonees(){
-        
-        $this->vue->titreVue = 'Vos informations';   
-        
-        $this->vue->entete = "../vues/templates/entete.inc.php"; 
-                
-        $this->vue->gauche = "../vues/templates/gauche.inc.php";
-        
-        $lesInformations = new M_Utilisateurs();
-        
-        $this->vue->lesInformations = $lesInformations->getFromLogin(MaSession::get('login'));
-                
-        $this->vue->loginAuthentification = MaSession::get('login');
-       
-        $this->vue->centre = "../vues/utilisateur/templates/centre.affichermesInformations.inc.php";
-        
-        $this->vue->pied = "../vues/templates/pied.inc.php";
-        
+class C_Utilisateur extends C_ControleurGenerique {
+    
+    /**
+     * préparation et affichage des coordonnées de l'utilisateur courant
+     */
+    function coordonnees(){
+        $this->vue = new V_Vue("../vues/templates/template.inc.php");
+        $this->vue->ecrireDonnee('titreVue','Vos informations');   
+        // charger les coordonnées de l'utilisateur connecté depuis la BDD       
+        $daoPers = new M_DaoPersonne();
+        $utilisateur = $daoPers->getOneByLoginLazy(MaSession::get('login'));
+        $this->vue->ecrireDonnee('utilisateur',$utilisateur);
+        // transmettre le login        
+        $this->vue->ecrireDonnee('loginAuthentification',MaSession::get('login'));
+        // vue centrale à inclure
+        $this->vue->ecrireDonnee('centre',"../vues/includes/utilisateur/centreAfficherMesInformationsFormulaire.inc.php");
         $this->vue->afficher();
     }
-       // midification des coordonnée de l'utilisateur 
-    function modifierCoordonees(){
-        
-        $this->vue->titreVue = 'Modification de vos informations';   
-        
-        $this->vue->entete = "../vues/templates/entete.inc.php"; 
-                
-        $this->vue->gauche = "../vues/templates/gauche.inc.php";
-        
-        $lesInformations = new M_Utilisateurs();
-                
-        $this->vue->lesInformations = $lesInformations->getFromLogin(MaSession::get('login'));
-                        
-        $this->vue->loginAuthentification = MaSession::get('login');
+    
+    /**
+     *  modification des coordonnées de l'utilisateur courant
+     */
+    function modifierCoordonnees(){
+        $this->vue = new V_Vue("../vues/templates/template.inc.php");
+        $this->vue->ecrireDonnee('titreVue','Modification de vos informations');   
+        // charger les coordonnées de l'utilisateur connecté depuis la BDD       
+        $daoPers = new M_DaoPersonne();
+        $utilisateur = $daoPers->getOneByLoginLazy(MaSession::get('login'));
+        $this->vue->ecrireDonnee('utilisateur',$utilisateur);
+        // transmettre le login        
+        $this->vue->ecrireDonnee('loginAuthentification',MaSession::get('login'));
        
-        $this->vue->centre = "../vues/utilisateur/templates/centre.modifierMesInformations.inc.php";
-        
-        $this->vue->pied = "../vues/templates/pied.inc.php";
-        
+        $this->vue->ecrireDonnee('centre',"../vues/includes/utilisateur/centreModifierMesInformationsFormulaire.inc.php");
         $this->vue->afficher();
     }
+    
     //validation de modification des donnée personelle à l'utilisateur
-    function validerModifierCoordonees(){
+    function validerModifierCoordonnees(){
         
-        $this->vue->titreVue = "Modification de mes informations";
+        $this->vue->titreVue = "Modification de vos informations";
         $utilisateur = new M_LesDonneesCreationUtilisateur();
         // préparer la liste des paramètres
         $lesParametres = array();

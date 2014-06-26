@@ -11,7 +11,7 @@
         if (!is_null($this->lireDonnee('loginAuthentification'))) {
             echo "<h2>Partie " . $this->lireDonnee('loginAuthentification') . "</h2>";
             //menu de gauche présent pour tous les utilisateurs
-            echo "<li><a href=\".?controleur=utilisateur&action=coordonees\">-Mes informations</a></li>";
+            echo "<li><a href=\".?controleur=utilisateur&action=coordonnees\">-Mes informations</a></li>";
             echo "<li><a href=\".?controleur=utilisateur&action=afficherEntreprise\">-Afficher les entreprises</a></li>";
         } else {
             echo "<li><a href=\".?controleur=connexion&action=seConnecter\">Se connecter</a></li>";
