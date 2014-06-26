@@ -10,7 +10,7 @@ class C_Connexion extends C_ControleurGenerique {
         $this->vue = new V_Vue("../vues/templates/template.inc.php");
         $this->vue->ajouterDonnee("titreVue","GestStage : Connexion");
         // Centre : formulaire de connexion
-        $this->vue->ajouterDonnee('centre',"../vues/connexion/centreSeConnecterFormulaire.inc.php");
+        $this->vue->ajouterDonnee('centre',"../vues/includes/connexion/centreSeConnecterFormulaire.inc.php");
         $this->vue->afficher();
     }
 
@@ -23,7 +23,7 @@ class C_Connexion extends C_ControleurGenerique {
     function authentifier() {
         $this->vue = new V_Vue("../vues/templates/template.inc.php");
         $this->vue->ajouterDonnee('titreVue',"GestStage : Accueil");
-        $this->vue->ajouterDonnee('centre',"../vues/connexion/centreAuthentifier.inc.php");
+        $this->vue->ajouterDonnee('centre',"../vues/includes/connexion/centreAuthentifier.inc.php");
 
 
         //------------------------------------------------------------------------
@@ -43,11 +43,11 @@ class C_Connexion extends C_ControleurGenerique {
 //                $this->vue->getDonnees['centre'] = "../vues/connexion/centreAuthentifier.inc.php";
             } else {
                 $this->vue->ajouterDonnee('message',"ECHEC d'identification : login ou mot de passe inconnus ");
-                $this->vue->ajouterDonnee('centre',"../vues/connexion/centreSeConnecterFormulaire.inc.php");
+                $this->vue->ajouterDonnee('centre',"../vues/includes/connexion/centreSeConnecterFormulaire.inc.php");
             }
         } else {
             $this->vue->ajouterDonnee('message',"Attention : le login ou le mot de passe ne sont pas renseign&eacute;s");
-            $this->vue->ajouterDonnee('centre',"../vues/connexion/centreSeConnecterFormulaire.inc.php");
+            $this->vue->ajouterDonnee('centre',"../vues/includes/connexion/centreSeConnecterFormulaire.inc.php");
         }
         //------------------------------------------------------------------------
 
