@@ -15,6 +15,7 @@ abstract class M_DaoGenerique {
             /* Connexion à une base via PDO */
             try {
                 $this->setPdo(new PDO(DSN, USER, MDP));
+                $this->getPdo()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $this->getPdo()->query("SET NAMES utf8");
             } catch (PDOException $e) {
                 echo 'Connexion échouée : ' . $e->getMessage();
@@ -26,7 +27,7 @@ abstract class M_DaoGenerique {
     function deconnecter() {
         $this->setPdo(null);
     }
-    
+
     /**
      * fonction à redéfinir dans chaque classe Dao concrète
      * Permet d'instancier un objet d'après les valeurs d'un enregistrement lu dans la base de données
@@ -41,30 +42,31 @@ abstract class M_DaoGenerique {
      * Lire tous les enregistrements d'une table
      * @return tableau-associatif d'objets : un tableau d'instances de la classe métier
      */
-    function getAll(){
+    function getAll() {
         $retour = null;
-        $pdo = $this->connecter();
         // Requête textuelle
         $sql = "SELECT * FROM $this->nomTable ORDER BY $this->nomClefPrimaire";
-        // préparer la requête PDO
-        $queryPrepare = $pdo->prepare($sql);
-        // exécuter la requête PDO
-        if ($queryPrepare->execute()) {
-            // si la requête réussit :
-            // initialiser le tableau d'objets à retourner
-            $retour= array();
-            // pour chaque enregistrement retourné par la requête
-            while($enregistrement = $queryPrepare->fetch(PDO::FETCH_ASSOC)){
-                // construir un objet métier correspondant
-                $unObjetMetier = $this->enregistrementVersObjet($enregistrement);
-                // ajouter l'objet au tableau
-                $retour[] = $unObjetMetier;
+        try {
+            // préparer la requête PDO
+            $queryPrepare = $this->pdo->prepare($sql);
+            // exécuter la requête PDO
+            if ($queryPrepare->execute()) {
+                // si la requête réussit :
+                // initialiser le tableau d'objets à retourner
+                $retour = array();
+                // pour chaque enregistrement retourné par la requête
+                while ($enregistrement = $queryPrepare->fetch(PDO::FETCH_ASSOC)) {
+                    // construir un objet métier correspondant
+                    $unObjetMetier = $this->enregistrementVersObjet($enregistrement);
+                    // ajouter l'objet au tableau
+                    $retour[] = $unObjetMetier;
+                }
             }
+        } catch (PDOException $e) {
+            echo get_class($this) . ' - '.__METHOD__ . ' : '. $e->getMessage();
         }
-        $this->deconnecter();
         return $retour;
     }
-    
 
     /**
      * Lire un enregistrement d'après une valeur de clef primaire
@@ -72,31 +74,55 @@ abstract class M_DaoGenerique {
      * @param $valeurClePrimaire
      * @return objet : une instance de la classe métier
      */
-    function getOneById($valeurClePrimaire){
+    function getOneById($valeurClePrimaire) {
         $retour = null;
-        $pdo = $this->connecter();
-        // Requête textuelle paramétrée (le paramètre est symbolisé par un ?)
-        $sql = "SELECT * FROM $this->nomTable  WHERE $this->nomClefPrimaire = ?";
-        // préparer la requête PDO
-        $queryPrepare = $pdo->prepare($sql);
-        // exécuter la requête avec les valeurs des paramètres (il n'y en a qu'un ici) dans un tableau
-        if ($queryPrepare->execute(array($valeurClePrimaire))) {
-            // si la requête réussit :
-            // extraire l'enregistrement retourné par la requête
-            $enregistrement = $queryPrepare->fetch(PDO::FETCH_ASSOC);
-            // construire l'objet métier correspondant
-            $retour = $this->enregistrementVersObjet($enregistrement);
+        try {
+            // Requête textuelle paramétrée (le paramètre est symbolisé par un ?)
+            $sql = "SELECT * FROM $this->nomTable  WHERE $this->nomClefPrimaire = ?";
+            // préparer la requête PDO
+            $queryPrepare = $this->pdo->prepare($sql);
+            // exécuter la requête avec les valeurs des paramètres (il n'y en a qu'un ici) dans un tableau
+            if ($queryPrepare->execute(array($valeurClePrimaire))) {
+                // si la requête réussit :
+                // extraire l'enregistrement retourné par la requête
+                $enregistrement = $queryPrepare->fetch(PDO::FETCH_ASSOC);
+                // construire l'objet métier correspondant
+                $retour = $this->enregistrementVersObjet($enregistrement);
+            }
+        } catch (PDOException $e) {
+            echo get_class($this) . ' - '.__METHOD__ . ' : '. $e->getMessage();
         }
-        $this->deconnecter();
         return $retour;
     }
+    
+    /**
+     * Suppression d'un enregistrement d'après son identifiant
+     * @param identifiant métier de l'objet é détruire
+     * @return 
+     */
+    function delete($idMetier) {
+        $retour = FALSE;
+        try {
+            // Requête textuelle paramétrée 
+            $sql = "DELETE FROM $this->nomTable WHERE $this->nomClefPrimaire = :id";
+            // préparer la  liste des paramètres (1 seul)
+            $parametres = array(':id'=>$idMetier);
+            // préparer la requête PDO
+            $queryPrepare = $this->pdo->prepare($sql);
+            // exécuter la requête avec les valeurs des paramètres (il n'y en a qu'un ici) dans un tableau
+            $retour = $queryPrepare->execute($parametres);
+        } catch (PDOException $e) {
+            echo get_class($this) . ' - ' . __METHOD__ . ' : ' . $e->getMessage();
+        }
+        return $retour;
+    }   
 
     /**
      * Insertion d'un nouvel enregistrement
      * @param $objetMetier objet métier contenant les données nécessaires à l'ajout
      * @return 
      */
-    abstract function insert($objetMetier) ;
+    abstract function insert($objetMetier);
 
     /**
      * Mise à jour d'un enregistrement d'après son identifiant
@@ -105,13 +131,6 @@ abstract class M_DaoGenerique {
      * @return 
      */
     abstract function update($idMetier, $objetMetier);
-
-    /**
-     * Suppression d'un enregistrement d'après son identifiant
-     * @param identifiant métier de l'objet é détruire
-     * @return 
-     */
-    abstract function delete($idMetier) ;
 
 //
 //    /**
@@ -122,7 +141,7 @@ abstract class M_DaoGenerique {
 //     * @return boolean : succès/échec de la mise à jour
 //     */
 //    function update($valeurClePrimaire, $tabChampsValeurs) {
-//        $pdo = $this->connecter();
+//        $this->pdo = $this->connecter();
 //        // Construction de la requête textuelle
 //        $query = "UPDATE " . $this->table . " SET ";
 //        $tabValeurs = array();   // tableau des valeurs à construire pour l'exécution de la requête
@@ -138,7 +157,7 @@ abstract class M_DaoGenerique {
 //        // Clause de restriction
 //        $query.= " WHERE IDPERSONNE = ? ";
 //        $tabValeurs[] = $valeurClePrimaire;
-//        $queryPrepare = $pdo->prepare($query);
+//        $queryPrepare = $this->pdo->prepare($query);
 //        // Exécution de la requête
 //        $retour = $queryPrepare->execute($tabValeurs);
 //        $this->deconnecter();
@@ -148,7 +167,7 @@ abstract class M_DaoGenerique {
 //
 //    //même que précédent mais pour une organisation
 //    function updateE($valeurClePrimaire, $tabChampsValeurs) {
-//        $pdo = $this->connecter();
+//        $this->pdo = $this->connecter();
 //        // Construction de la requête textuelle
 //        $query = "UPDATE " . $this->table . " SET ";
 //        $tabValeurs = array();   // tableau des valeurs à construire pour l'exécution de la requête
@@ -164,7 +183,7 @@ abstract class M_DaoGenerique {
 //        // Clause de restriction
 //        $query.= " WHERE IDORGANISATION = ? ";
 //        $tabValeurs[] = $valeurClePrimaire;
-//        $queryPrepare = $pdo->prepare($query);
+//        $queryPrepare = $this->pdo->prepare($query);
 //        // Exécution de la requête
 //        $retour = $queryPrepare->execute($tabValeurs);
 //        $this->deconnecter();
@@ -179,7 +198,7 @@ abstract class M_DaoGenerique {
 //     * @return boolean : succès/échec de l'insertion
 //     */
 //    function insert($tabValeurs) {
-//        $pdo = $this->connecter();
+//        $this->pdo = $this->connecter();
 //        $query = "INSERT INTO " . $this->table . " VALUES ( null";
 //        // Pour chaque valeur à ajouter dans l'enregistrement, insérer un ?
 //        for ($i = 0; $i < count($tabValeurs); $i++) {
@@ -187,7 +206,7 @@ abstract class M_DaoGenerique {
 //        }
 //        $query.= " ) ";
 //
-//        $queryPrepare = $pdo->prepare($query);
+//        $queryPrepare = $this->pdo->prepare($query);
 //        $retour = $queryPrepare->execute($tabValeurs);
 //        $this->deconnecter();
 //        return $retour;
@@ -200,15 +219,14 @@ abstract class M_DaoGenerique {
 //     * @return boolean : succès/échec de la suppression
 //     */
 //    function delete($valeurClePrimaire) {
-//        $pdo = $this->connecter();
+//        $this->pdo = $this->connecter();
 //        $query = "DELETE FROM " . $this->table;
 //        $query.= " WHERE " . $this->clePrimaire . ' = ?';
-//        $queryPrepare = $pdo->prepare($query);
+//        $queryPrepare = $this->pdo->prepare($query);
 //        $retour = $queryPrepare->execute(array($valeurClePrimaire));
 //        $this->deconnecter();
 //        return $retour;
 //    }
-
     // ACCESSEURS et MUTATEURS
     public function getPdo() {
         return $this->pdo;
@@ -311,5 +329,4 @@ abstract class M_DaoGenerique {
 //        $this->deconnecter();
 //        return $retour;
 //    }
-
 }

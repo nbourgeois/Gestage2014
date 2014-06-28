@@ -14,26 +14,57 @@ and open the template in the editor.
         require_once("../includes/parametres.inc.php");
         require_once("../includes/fonctions.inc.php");
 
-        $pdo = new M_DaoPersonne();
-//
-//        $pers = $pdo->getOneById(16);
-//        var_dump($pers);
-//        
-////        $lesPers = $pdo->getAll();
-////        var_dump($lesPers);
-//        
-//        $pers = $pdo->getOneByLoginLazy('admin');
-//        var_dump($pers);
-//        
-//        $pers = $pdo->getOneByLoginEager('test');
-//        var_dump($pers);
-        
-        $pers= new M_Personne(0, null, null, "M.", "Hugo", "Victor", "0278901234", "vhugofree.fr", "0678901234", "", "", "vhugo", "vh");
+        $dao = new M_DaoPersonne();
+        $dao->connecter();
+
+        //Test de sélection par Id
+        echo "<p>Test de sélection par Id</p>";
+        $pers = $dao->getOneById(16);
         var_dump($pers);
-        $pdo->insert($pers);
-        $persLu = $pdo->getOneByLoginLazy('vhugo');
+        
+        //Test de sélection de tous les enregistrements
+        echo "<p>Test de sélection de tous les enregistrements</p>";
+        $lesPers = $dao->getAll();
+        var_dump($lesPers);
+        
+        //Test de sélection sur le login sans association
+        echo "<p>Test de sélection sur le login sans association</p>";
+        $pers = $dao->getOneByLoginLazy('admin');
+        var_dump($pers);
+        
+        //Test de sélection sur le login avec association
+        echo "<p>Test de sélection sur le login avec association</p>";
+        $pers = $dao->getOneByLoginEager('test');
+        var_dump($pers);
+
+        //Test d'insertion
+        echo "<p>Test d'insertion</p>";
+        $pers= new M_Personne(0, null, null, "M.", "Hugo", "Victor", "0278901234", "vhugo@free.fr", "0678901234", "", "", "vhugo", "vh");
+        var_dump($pers);
+        $dao->insert($pers);
+        $persLu = $dao->getOneByLoginLazy('vhugo');
+        var_dump($persLu);
+
+        //Test de modification
+        echo "<p>Test de modification</p>";
+       $pers->setMail("victor.hugo@laposte.net");
+        $pers->setCivilite("Monsieur");
+//        $id= $dao->getPdo()->lastInsertId();
+        $enr = $dao->getPdo()->query('SELECT MAX(IDPERSONNE) FROM PERSONNE;')->fetch();
+        $id= $enr[0];
+        $dao->update($id,$pers);
+        $persLu = $dao->getOneByLoginLazy('vhugo');
+        var_dump($persLu);
+ 
+        //Test de suppression
+        echo "<p>Test de suppression</p>";
+        $id = $persLu->getId();
+        echo "Supprimer : ".$id."<br/>";
+        $dao->delete($id);
+        $persLu = $dao->getOneById($id);
         var_dump($persLu);
         
+        $dao->deconnecter();
         ?>
     </body>
 </html>
