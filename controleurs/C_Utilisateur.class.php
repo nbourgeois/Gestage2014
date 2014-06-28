@@ -38,8 +38,8 @@ class C_Utilisateur extends C_ControleurGenerique {
     
     //validation de modification des donnée personelle à l'utilisateur
     function validerModifierCoordonnees(){
-        
-        $this->vue->titreVue = "Modification de vos informations";
+        $this->vue = new V_Vue("../vues/templates/template.inc.php");
+        $this->vue->ecrireDonnee('titreVue',"Modification de vos informations");
         $utilisateur = new M_LesDonneesCreationUtilisateur();
         // préparer la liste des paramètres
         $lesParametres = array();

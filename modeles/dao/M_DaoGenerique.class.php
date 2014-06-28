@@ -91,38 +91,28 @@ abstract class M_DaoGenerique {
         return $retour;
     }
 
-//    // fonction qui permetra de connaitre le nombre fois qu'une Identité est déjà présente dans la base de donnée 
-//    function getCount($valeurACompter) {
-//        $pdo = $this->connecter();
-//        // Requête textuelle
-//        $query = "SELECT COUNT(*) AS NB FROM " . $this->table . " WHERE " . $this->clePrimaire . "= ? ;";
-//        $queryPrepare = $pdo->prepare($query);
-//        // Spécifier le type de classe à instancier
-//        $queryPrepare->setFetchMode(PDO::FETCH_CLASS, $this->nomClasseMetier);
-//        // Exécuter la requête avec les valeurs des paramètres
-//        $retour = null;
-//        if ($queryPrepare->execute(array($valeurACompter))) {
-//            $retour = $queryPrepare->fetch(PDO::FETCH_CLASS);
-//        }
-//        $this->deconnecter();
-//        return $retour;
-//    }
-//
-//
-//
-//    function getId($id, $table, $nomLibelle, $valeur) {
-//        $pdo = $this->connecter();
-//        // Requête textuelle
-//        $query = "SELECT " . $id . " FROM " . $table . " WHERE " . $nomLibelle . " = '" . $valeur . "'";
-//        $resultSet = $pdo->query($query);
-//        // FETCH_CLASS permet de retourner des enregistrements sous forme d'objets de la classe spécifiée
-//        // ici : $this->nomClasseMetier contient "Enregistrement"
-//        // La classe Enregistrement est une classe générique vide qui sera automatiquement affublée d'autant
-//        // d'attributs publics qu'il y a de colonnes dans le jeu d'enregistrements
-//        $retour = $resultSet->fetchAll(PDO::FETCH_COLUMN, 0);
-//        $this->deconnecter();
-//        return $retour[0];
-//    }
+    /**
+     * Insertion d'un nouvel enregistrement
+     * @param $objetMetier objet métier contenant les données nécessaires à l'ajout
+     * @return 
+     */
+    abstract function insert($objetMetier) ;
+
+    /**
+     * Mise à jour d'un enregistrement d'après son identifiant
+     * @param $idMetier identifiant métier de l'objet à modifier
+     * @param $objetMetier objet métier modifié
+     * @return 
+     */
+    abstract function update($idMetier, $objetMetier);
+
+    /**
+     * Suppression d'un enregistrement d'après son identifiant
+     * @param identifiant métier de l'objet é détruire
+     * @return 
+     */
+    abstract function delete($idMetier) ;
+
 //
 //    /**
 //     * update

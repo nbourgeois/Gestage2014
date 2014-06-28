@@ -39,8 +39,34 @@ class M_DaoPersonne extends M_DaoGenerique {
             $laSpecialite = new M_Specialite($enreg['IDSPECIALITE'], $enreg['LIBELLECOURTSPECIALITE'], $enreg['LIBELLELONGSPECIALITE']);
         }
         // ces objets sont liés à la personne
-        $retour->setRole($leRole) ;
+        $retour->setRole($leRole);
         $retour->setSpecialite($laSpecialite);
+        return $retour;
+    }
+
+    /**
+     * Prépare une liste de paramètres pour une requête SQL UPDATE ou INSERT
+     * @param Object $objetMetier
+     * @return array : tableau ordonné de valeurs
+     */
+    public function objetVersEnregistrement($objetMetier) {
+        // construire un tableau des paramètres d'insertion ou de modification
+        // l'ordre des valeurs est important : il correspond à celui des paramètres de la requête SQL
+        // le rôle et la spécialité seront mis à jour séparément
+        $retour = array(
+//            ':idRole'=>$objetMetier->getRole()->getId(),
+            ':idRole'=>1,
+            ':civilite'=>$objetMetier->getCivilite(),
+            ':nom'=>$objetMetier->getNom(),
+            ':prenom'=>$objetMetier->getPrenom(),
+            ':numTel'=>$objetMetier->getNumTel(),
+            ':mail'=>$objetMetier->getMail(),
+            ':mobile'=>$objetMetier->getMobile(),
+            ':etudes'=>$objetMetier->getEtudes(),
+            ':formation'=>$objetMetier->getFormation(),
+            ':login'=>$objetMetier->getLogin(),
+            ':mdp'=>$objetMetier->getMdp(),
+        );
         return $retour;
     }
 
@@ -75,7 +101,7 @@ class M_DaoPersonne extends M_DaoGenerique {
     function getOneByLoginLazy($valeurLogin) {
         $retour = null;
         $pdo = $this->connecter();
-        // Requête textuelle paramétrée (le paramètre est symbolisé par un ?
+        // Requête textuelle paramétrée (le paramètre est symbolisé par un ?)
         $query = "SELECT * FROM $this->nomTable WHERE LOGINUTILISATEUR = ?";
         // préparer la requête PDO
         $queryPrepare = $pdo->prepare($query);
@@ -98,18 +124,90 @@ class M_DaoPersonne extends M_DaoGenerique {
      * @return boolean 
      */
     function verifierLogin($login, $mdp) {
-        $retour=null;
+        $retour = null;
         $pdo = $this->connecter();
         if ($pdo) {
             $sql = "SELECT * FROM $this->nomTable WHERE LOGINUTILISATEUR=:login AND MDPUTILISATEUR=:mdp";
             $stmt = $pdo->prepare($sql);
-            $execute = $stmt->execute(array(':login' => $login, ':mdp' => sha1($mdp)));
-            $retour = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($stmt->execute(array(':login' => $login, ':mdp' => sha1($mdp)))) {
+                $retour = $stmt->fetch(PDO::FETCH_ASSOC);
+            }
         }
         return $retour;
     }
 
+    /**
+     * suppression
+     * @param type $idMetier
+     * @return boolean Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
+     */
+    function delete($idMetier) {
+        $retour = FALSE;
+        $pdo = $this->connecter();
+        // Requête textuelle paramétrée (le paramètre est symbolisé par un ?)
+        $sql = "DELETE FROM $this->nomTable WHERE IDPERSONNE = ?";
+        // préparer la  liste des paramètres (1 seul)
+        $parametres = array($idMetier);
+        // préparer la requête PDO
+        $queryPrepare = $pdo->prepare($sql);
+        // exécuter la requête avec les valeurs des paramètres (il n'y en a qu'un ici) dans un tableau
+        $retour = $queryPrepare->execute($parametres);
+        return $retour;
+    }
 
+    function insert($objetMetier) {
+        $retour = FALSE;
+        $pdo = $this->connecter();
+        // Requête textuelle paramétrée (paramètres nommés)
+        $sql = "INSERT INTO $this->nomTable (";
+        $sql .= "CIVILITE,IDROLE,NOM,PRENOM,NUM_TEL,ADRESSE_MAIL,NUM_TEL_MOBILE,";
+        $sql .= "ETUDES,FORMATION,LOGINUTILISATEUR,MDPUTILISATEUR)  ";
+        $sql .= "VALUES (";
+        $sql .= ":civilite, :idRole, :nom, :prenom, :numTel, :mail, :mobile, ";
+        $sql .= ":etudes, :formation, :login, :mdp)";
+        var_dump($sql);
+        try {
+            // préparer la requête PDO
+            $queryPrepare = $pdo->prepare($sql);
+            // préparer la  liste des paramètres, avec l'identifiant en dernier
+            $parametres = $this->objetVersEnregistrement($objetMetier);
+            // exécuter la requête avec les valeurs des paramètres dans un tableau
+            $retour = $queryPrepare->execute($parametres);
+            debug_query($sql, $parametres);
+        } catch (PDOException $Exception) {
+            echo 'DaoPersonne - insert : ' . $e->getMessage();
+        }
+        return $retour;
+    }
+
+    function update($idMetier, $objetMetier) {
+        $retour = FALSE;
+        $pdo = $this->connecter();
+        // Requête textuelle paramétrée (paramètres nommés)
+        $sql = "UPDATE $this->nomTable SET ";
+        $sql .= "IDROLE = :idRole , ";
+        $sql .= "CIVILITE = :civilite , ";
+        $sql .= "NOM = :nom , ";
+        $sql .= "PRENOM = :prenom , ";
+        $sql .= "NUM_TEL = :numTel , ";
+        $sql .= "ADRESSE_MAIL = :mail , ";
+        $sql .= "NUM_TEL_MOBILE = :mobile , ";
+        $sql .= "ETUDES = :etudes , ";
+        $sql .= "FORMATION = :formation , ";
+        $sql .= "LOGINUTILISATEUR = :login , ";
+        $sql .= "MDPUTILISATEUR = :mdp ";
+        $sql .= "WHERE IDPERSONNE = :id";
+        var_dump($sql);
+        // préparer la requête PDO
+        $queryPrepare = $pdo->prepare($sql);
+        // préparer la  liste des paramètres la valeur de l'identifiant
+        //  à prendre en compte est celle qui a été passée en paramètre à la méthode
+        $parametres = $this->objetVersEnregistrement($objetMetier);
+        $parametres[':id']=$idMetier;
+        // exécuter la requête avec les valeurs des paramètres dans un tableau
+        $retour = $queryPrepare->execute($parametres);
+        return $retour;
+    }
 
 }
 

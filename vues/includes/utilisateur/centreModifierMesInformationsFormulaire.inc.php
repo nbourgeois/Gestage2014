@@ -4,7 +4,7 @@
 $unUtilisateur = $this->lireDonnee('utilisateur');
 ?>
 
-<form method="post" action=".?controleur=utilisateur&action=validerModifierCoordonees&id=<?php echo $unUtilisateur->getId(); ?>">
+<form method="post" action=".?controleur=utilisateur&action=validerModifierCoordonnees&id=<?php echo $unUtilisateur->getId(); ?>">
     <h1>Modification des information personelle</h1>
     <fieldset>
         <legend>Mes informations</legend>

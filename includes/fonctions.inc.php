@@ -65,7 +65,15 @@ function getParametre($nomParametre, $valeurDefaut) {
     return $valeurParametre;
 }
 
-//fonction d'impretion 
+
+function debug_query($query, $param) {
+     foreach ($param as $name=>$value) {
+             $query = str_replace($name, '"' . $value . '"', $query);
+     }
+     echo '<p>' . $query . '</p>';
+}
+
+//fonction d'impression 
 function edition(){
     options =="Width=700,Height=700";
     windows.open("../includes/edition.php","edition",options);
