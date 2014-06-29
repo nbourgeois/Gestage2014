@@ -17,4 +17,30 @@ class M_Specialite{
             $this->libelleLong = $libelleLong;
         }
 
+        public function getId() {
+            return $this->id;
+        }
+
+        public function getLibellecCourt() {
+            return $this->libellecCourt;
+        }
+
+        public function getLibelleLong() {
+            return $this->libelleLong;
+        }
+
+        public function setId($id) {
+            $this->id = $id;
+        }
+
+        public function setLibellecCourt($libellecCourt) {
+            $this->libellecCourt = $libellecCourt;
+        }
+
+        public function setLibelleLong($libelleLong) {
+            $this->libelleLong = $libelleLong;
+        }
+
+        
+        
 }

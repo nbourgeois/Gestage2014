@@ -17,4 +17,30 @@ class M_Role {
         $this->libelle = $libelle;
     }
     
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getRang() {
+        return $this->rang;
+    }
+
+    public function getLibelle() {
+        return $this->libelle;
+    }
+
+    public function setId($id) {
+        $this->id = $id;
+    }
+
+    public function setRang($rang) {
+        $this->rang = $rang;
+    }
+
+    public function setLibelle($libelle) {
+        $this->libelle = $libelle;
+    }
+
+    
+    
 }

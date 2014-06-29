@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <meta charset="UTF-8">
@@ -19,7 +14,7 @@ and open the template in the editor.
 
         //Test de sélection par Id Eager
         echo "<p>Test de sélection par Id Eager</p>";
-        $pers = $dao->getOneByIdEager(1);
+        $pers = $dao->getOneByIdEager(14);
         var_dump($pers);
 
         
@@ -40,10 +35,11 @@ and open the template in the editor.
 
         //Test d'insertion
         echo "<p>Test d'insertion</p>";
-        $pers= new M_Personne(0, null, null, "M.", "Hugo", "Victor", "0278901234", "vhugo@free.fr", "0678901234", "", "", "vhugo", "vh");
+        $role = new M_Role(2, 2, "intendant");
+        $pers= new M_Personne(0, null, $role, "M.", "Hugo", "Victor", "0278901234", "vhugo@free.fr", "0678901234", "", "", "vhugo", "vh");
         var_dump($pers);
         $dao->insert($pers);
-        $persLu = $dao->getOneByLoginLazy('vhugo');
+        $persLu = $dao->getOneByLoginEager('vhugo');
         var_dump($persLu);
 
         //Test de modification
@@ -54,7 +50,7 @@ and open the template in the editor.
         $enr = $dao->getPdo()->query('SELECT MAX(IDPERSONNE) FROM PERSONNE;')->fetch();
         $id= $enr[0];
         $dao->update($id,$pers);
-        $persLu = $dao->getOneByLoginLazy('vhugo');
+        $persLu = $dao->getOneByLoginEager('vhugo');
         var_dump($persLu);
  
         //Test de suppression

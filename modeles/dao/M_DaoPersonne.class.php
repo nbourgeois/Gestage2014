@@ -58,9 +58,13 @@ class M_DaoPersonne extends M_DaoGenerique {
         // construire un tableau des paramètres d'insertion ou de modification
         // l'ordre des valeurs est important : il correspond à celui des paramètres de la requête SQL
         // le rôle et la spécialité seront mis à jour séparément
+        if (!is_null($objetMetier->getRole())){
+            $idRole = $objetMetier->getRole()->getId();
+        }else{
+            $idRole = 0; // "Autre" (simple visiteur)
+        }
         $retour = array(
-//            ':idRole'=>$objetMetier->getRole()->getId(),
-            ':idRole' => 1,
+            ':idRole' => $idRole,
             ':civilite' => $objetMetier->getCivilite(),
             ':nom' => $objetMetier->getNom(),
             ':prenom' => $objetMetier->getPrenom(),
