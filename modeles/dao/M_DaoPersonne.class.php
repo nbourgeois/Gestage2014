@@ -25,11 +25,16 @@ class M_DaoPersonne extends M_DaoGenerique {
         return $retour;
     }
 
+    /**
+     * idem enregistrementVersObjet, mais en chargeant les objets Role et Specialite
+     * @param type $enreg
+     * @return type
+     */
     public function enregistrementVersObjetEager($enreg) {
         // on construit l'objet Personne sans spécialité ni rôle
         $retour = $this->enregistrementVersObjet($enreg);
         // on instancie les objets Role et Specialite s'il y a lieu
-        var_dump($enreg);
+//        var_dump($enreg);
         $leRole = null;
         if ($enreg['IDROLE'] != null) {
             $leRole = new M_Role($enreg['IDROLE'], $enreg['RANG'], $enreg['LIBELLE']);
@@ -67,6 +72,31 @@ class M_DaoPersonne extends M_DaoGenerique {
             ':login' => $objetMetier->getLogin(),
             ':mdp' => $objetMetier->getMdp(),
         );
+        return $retour;
+    }
+    
+    // eager-fetching
+    function getOneByIdEager($id){
+         $retour = null;
+        try {
+            // Requête textuelle
+            $sql = "SELECT * FROM $this->nomTable P ";
+            $sql .= "LEFT OUTER JOIN SPECIALITE S ON S.IDSPECIALITE = P.IDSPECIALITE ";
+            $sql .= "LEFT OUTER JOIN ROLE R ON R.IDROLE = P.IDROLE ";
+            $sql .= "WHERE $this->nomClefPrimaire = :id";
+            // préparer la requête PDO
+            $queryPrepare = $this->pdo->prepare($sql);
+            // exécuter la requête avec les valeurs des paramètres (il n'y en a qu'un ici) dans un tableau
+            if ($queryPrepare->execute(array(':id'=>$id))) {
+                // si la requête réussit :
+                // extraire l'enregistrement retourné par la requête
+                $enregistrement = $queryPrepare->fetch(PDO::FETCH_ASSOC);
+                // construire l'objet métier correspondant
+                $retour = $this->enregistrementVersObjetEager($enregistrement);
+            }
+        } catch (PDOException $e) {
+            echo get_class($this) . ' - ' . __METHOD__ . ' : ' . $e->getMessage();
+        }
         return $retour;
     }
 
@@ -156,14 +186,14 @@ class M_DaoPersonne extends M_DaoGenerique {
             $sql .= "VALUES (";
             $sql .= ":civilite, :idRole, :nom, :prenom, :numTel, :mail, :mobile, ";
             $sql .= ":etudes, :formation, :login, :mdp)";
-            var_dump($sql);
+//            var_dump($sql);
             // préparer la requête PDO
             $queryPrepare = $this->pdo->prepare($sql);
             // préparer la  liste des paramètres, avec l'identifiant en dernier
             $parametres = $this->objetVersEnregistrement($objetMetier);
             // exécuter la requête avec les valeurs des paramètres dans un tableau
             $retour = $queryPrepare->execute($parametres);
-            debug_query($sql, $parametres);
+//            debug_query($sql, $parametres);
         } catch (PDOException $e) {
             echo get_class($this) . ' - ' . __METHOD__ . ' : ' . $e->getMessage();
         }
@@ -187,7 +217,7 @@ class M_DaoPersonne extends M_DaoGenerique {
             $sql .= "LOGINUTILISATEUR = :login , ";
             $sql .= "MDPUTILISATEUR = :mdp ";
             $sql .= "WHERE IDPERSONNE = :id";
-            var_dump($sql);
+//            var_dump($sql);
             // préparer la requête PDO
             $queryPrepare = $this->pdo->prepare($sql);
             // préparer la  liste des paramètres la valeur de l'identifiant
@@ -196,7 +226,7 @@ class M_DaoPersonne extends M_DaoGenerique {
             $parametres[':id'] = $idMetier;
             // exécuter la requête avec les valeurs des paramètres dans un tableau
             $retour = $queryPrepare->execute($parametres);
-            debug_query($sql, $parametres);
+//            debug_query($sql, $parametres);
         } catch (PDOException $e) {
             echo get_class($this) . ' - ' . __METHOD__ . ' : ' . $e->getMessage();
         }

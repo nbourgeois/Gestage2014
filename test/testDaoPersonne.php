@@ -17,10 +17,11 @@ and open the template in the editor.
         $dao = new M_DaoPersonne();
         $dao->connecter();
 
-        //Test de sélection par Id
-        echo "<p>Test de sélection par Id</p>";
-        $pers = $dao->getOneById(16);
+        //Test de sélection par Id Eager
+        echo "<p>Test de sélection par Id Eager</p>";
+        $pers = $dao->getOneByIdEager(1);
         var_dump($pers);
+
         
         //Test de sélection de tous les enregistrements
         echo "<p>Test de sélection de tous les enregistrements</p>";

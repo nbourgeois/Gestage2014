@@ -1,4 +1,4 @@
-<div id="entete">
+﻿<div id="entete">
 
     <h1 id="Titreappli">GestStage <b style="font-size:10px;" >Version <?php echo VERSION_APPLICATION ?></b></h1>
 

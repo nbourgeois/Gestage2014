@@ -1,4 +1,4 @@
-
+﻿
 <?php 
 // on récupère un objet métier de type Personne
 $unUtilisateur = $this->lireDonnee('utilisateur');
@@ -19,29 +19,25 @@ $unUtilisateur = $this->lireDonnee('utilisateur');
         <label for="tel">Tel :</label>
         <input type="text" name="tel" id="tel" value="<?php echo $unUtilisateur->getNumTel(); ?>"></input><br/>
         <?php
-            if (MaSession::get('role') != 4){
-                //contenue à affichée si l'utilisateur n'est pas un étudiant
-                
-            }else{//contenue à affichée si l'utilisateur est un étudiant
+            if (MaSession::get('role') == 4){
+                //contenu à afficher si l'utilisateur est un étudiant
         ?>
                 <label for="etudes">Etudes :</label>
-                <input type="text" name="etudes" id="etudes"  value="<?php echo $this->lesInformations->ETUDES; ?>"></input><br/>
+                <input type="text" name="etudes" id="etudes"  value="<?php echo $unUtilisateur->getEtudes(); ?>"></input><br/>
                 <label for="formation">Formation :</label>
-                <input type="text" name="formation" id="formation"  value="<?php echo $this->lesInformations->FORMATION; ?>"></input><br/>
-                
-        
+                <input type="text" name="formation" id="formation"  value="<?php echo $unUtilisateur->getFormation(); ?>"></input><br/>       
         <?php
             }
         ?>
                 <br />
                 <input type="submit" value="Sauvegarder" /><!--validation modification-->
-                <input type="button" value="Retour" onclick="history.go(-1)"><!--allez à la page précédente-->
+                <input type="button" value="Retour" onclick="history.back()"><!--allez à la page précédente-->
                 
     </fieldset>
    
 </form>
 <?php
-if (isset($this->message)) {
-    echo "<strong>".$this->message."</strong>";
+if (!is_null($this->lireDonnee('message'))) {
+    echo "<strong>".$this->lireDonnee('message')."</strong>";
 }
 ?>

@@ -1,4 +1,4 @@
-<!-- VARIABLES NECESSAIRES -->
+﻿<!-- VARIABLES NECESSAIRES -->
 <!-- Constantes globales  de includes/version.inc.php -->
 <!-- loginAuthentification : login si authentification ok -->
 <!-- listeCateg : tableau de <Enregistrement> avec les champs 'cat_code' et 'cat_libelle' -->

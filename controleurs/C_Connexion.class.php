@@ -34,7 +34,9 @@ class C_Connexion extends C_ControleurGenerique {
         if (isset($_POST['login']) && isset($_POST['mdp'])) {
             $login = $_POST['login'];
             $mdp = $_POST['mdp'];
+            $daoPersonne->connecter();
             $unUser = $daoPersonne->verifierLogin($login, $mdp);
+            $daoPersonne->deconnecter();
             if ($unUser) {
                 // Si le login et le mot de passe sont valides, ouvrir une nouvelle session
                 MaSession::nouvelle(array('login' => $login, 'role' => $unUser["IDROLE"])); // service minimum

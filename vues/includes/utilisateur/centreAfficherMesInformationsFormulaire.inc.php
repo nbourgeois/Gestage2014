@@ -1,4 +1,4 @@
-<!-- VARIABLES NECESSAIRES -->
+﻿<!-- VARIABLES NECESSAIRES -->
 <!-- $this->message : à afficher sous le formulaire -->
 <?php 
 // on récupère un objet métier de type Personne

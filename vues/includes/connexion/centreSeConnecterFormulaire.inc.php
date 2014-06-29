@@ -1,4 +1,4 @@
-<!-- VARIABLES NECESSAIRES -->
+﻿<!-- VARIABLES NECESSAIRES -->
 <!-- $this->message : à afficher sous le formulaire -->
 <form method="post" action=".?controleur=connexion&action=authentifier">
     <fieldset>

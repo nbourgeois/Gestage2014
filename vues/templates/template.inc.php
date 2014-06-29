@@ -1,8 +1,9 @@
-<!DOCTYPE html >
+﻿<!DOCTYPE html >
 <html lang="fr">
     <head>
-        <meta  content="text/html;charset=UTF-8" />
+        <meta charset="UTF-8">
         <link rel="stylesheet" href="../vues/css/styleLargeurFixe.css" />
+        <script type="text/javascript" src="../vues/javascript/fonctionsJavascript.inc.js"></script>
         <title><?php echo $this->lireDonnee('titreVue'); ?></title>
     </head>
     <body>
@@ -22,3 +23,4 @@
         </div>
     </body>
 </html>
+

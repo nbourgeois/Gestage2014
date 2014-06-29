@@ -39,6 +39,13 @@ abstract class M_DaoGenerique {
     abstract function enregistrementVersObjet($unEnregistrement);
 
     /**
+     * Prépare une liste de paramètres pour une requête SQL UPDATE ou INSERT
+     * @param Object $objetMetier
+     * @return array : tableau ordonné de valeurs
+     */
+    abstract function objetVersEnregistrement($objetMetier) ;
+
+    /**
      * Lire tous les enregistrements d'une table
      * @return tableau-associatif d'objets : un tableau d'instances de la classe métier
      */
@@ -141,9 +148,8 @@ abstract class M_DaoGenerique {
 //     * @return boolean : succès/échec de la mise à jour
 //     */
 //    function update($valeurClePrimaire, $tabChampsValeurs) {
-//        $this->pdo = $this->connecter();
 //        // Construction de la requête textuelle
-//        $query = "UPDATE " . $this->table . " SET ";
+//        $query = "UPDATE " . $this->nomTable . " SET ";
 //        $tabValeurs = array();   // tableau des valeurs à construire pour l'exécution de la requête
 //        $numParam = 0;              // on compte les paramètres : le premier n'est pas précédé d'une virgule
 //        foreach ($tabChampsValeurs as $champ => $valeur) {
@@ -155,41 +161,14 @@ abstract class M_DaoGenerique {
 //            $numParam++;
 //        }
 //        // Clause de restriction
-//        $query.= " WHERE IDPERSONNE = ? ";
+//        $query.= " WHERE $this->nomClefPrimaire = ? ";
 //        $tabValeurs[] = $valeurClePrimaire;
 //        $queryPrepare = $this->pdo->prepare($query);
 //        // Exécution de la requête
 //        $retour = $queryPrepare->execute($tabValeurs);
-//        $this->deconnecter();
-//
 //        return $retour;
 //    }
 //
-//    //même que précédent mais pour une organisation
-//    function updateE($valeurClePrimaire, $tabChampsValeurs) {
-//        $this->pdo = $this->connecter();
-//        // Construction de la requête textuelle
-//        $query = "UPDATE " . $this->table . " SET ";
-//        $tabValeurs = array();   // tableau des valeurs à construire pour l'exécution de la requête
-//        $numParam = 0;              // on compte les paramètres : le premier n'est pas précédé d'une virgule
-//        foreach ($tabChampsValeurs as $champ => $valeur) {
-//            if ($numParam != 0) {
-//                $query.= ", ";
-//            }
-//            $query.= $champ . " = ? ";  // ajout d'une clause du type champ = ?
-//            $tabValeurs[] = $valeur; // mémorisation de la valeur
-//            $numParam++;
-//        }
-//        // Clause de restriction
-//        $query.= " WHERE IDORGANISATION = ? ";
-//        $tabValeurs[] = $valeurClePrimaire;
-//        $queryPrepare = $this->pdo->prepare($query);
-//        // Exécution de la requête
-//        $retour = $queryPrepare->execute($tabValeurs);
-//        $this->deconnecter();
-//
-//        return $retour;
-//    }
 //
 //    /**
 //     * insert
@@ -198,8 +177,7 @@ abstract class M_DaoGenerique {
 //     * @return boolean : succès/échec de l'insertion
 //     */
 //    function insert($tabValeurs) {
-//        $this->pdo = $this->connecter();
-//        $query = "INSERT INTO " . $this->table . " VALUES ( null";
+//        $query = "INSERT INTO " . $this->nomTable . " VALUES ( null";
 //        // Pour chaque valeur à ajouter dans l'enregistrement, insérer un ?
 //        for ($i = 0; $i < count($tabValeurs); $i++) {
 //            $query.= ",?";
@@ -208,25 +186,9 @@ abstract class M_DaoGenerique {
 //
 //        $queryPrepare = $this->pdo->prepare($query);
 //        $retour = $queryPrepare->execute($tabValeurs);
-//        $this->deconnecter();
 //        return $retour;
 //    }
 //
-//    /**
-//     * delete
-//     * Supprimer un enregistrement de la table
-//     * @param type $valeurClePrimaire : identifiant de la table
-//     * @return boolean : succès/échec de la suppression
-//     */
-//    function delete($valeurClePrimaire) {
-//        $this->pdo = $this->connecter();
-//        $query = "DELETE FROM " . $this->table;
-//        $query.= " WHERE " . $this->clePrimaire . ' = ?';
-//        $queryPrepare = $this->pdo->prepare($query);
-//        $retour = $queryPrepare->execute(array($valeurClePrimaire));
-//        $this->deconnecter();
-//        return $retour;
-//    }
     // ACCESSEURS et MUTATEURS
     public function getPdo() {
         return $this->pdo;
@@ -236,97 +198,4 @@ abstract class M_DaoGenerique {
         $this->pdo = $pdo;
     }
 
-//    function getAllStage() {
-//        $pdo = $this->connecter();
-//        // Requête textuelle
-//        $query = "SELECT p1.NOM AS NOM_ELEVE, p1.PRENOM AS PRENOM_ELEVE, NOM_ORGANISATION,p.NOM AS NOM_PROF, p.PRENOM AS PRENOM_PROF ,DATEDEBUT, DATEFIN, VILLE, DIVERS  FROM " . $this->table . " 
-//        INNER JOIN PERSONNE p1 ON STAGE.IDETUDIANT = p1.IDPERSONNE
-//        INNER JOIN PERSONNE p ON STAGE.IDPROFESSEUR = p.IDPERSONNE
-//        INNER JOIN ORGANISATION ON STAGE.IDORGANISATION = ORGANISATION.IDORGANISATION
-//        ORDER BY " . $this->clePrimaire . " DESC";
-//        // Exécuter la requête
-//        $resultSet = $pdo->query($query);
-//        // FETCH_CLASS permet de retourner des enregistrements sous forme d'objets de la classe spécifiée
-//        // ici : $this->nomClasseMetier contient "Enregistrement"
-//        // La classe Enregistrement est une classe générique vide qui sera automatiquement affublée d'autant
-//        // d'attributs publics qu'il y a de colonnes dans le jeu d'enregistrements
-//        $retour = $resultSet->fetchAll(PDO::FETCH_CLASS, $this->nomClasseMetier);
-//        $this->deconnecter();
-//        return $retour;
-//    }
-//
-//    function getAllEtudiant() {
-//        $pdo = $this->connecter();
-//        // Requête textuelle
-//        $query = "SELECT * FROM PERSONNE WHERE IDROLE=4";
-//        // Exécuter la requête
-//        $resultSet = $pdo->query($query);
-//        // FETCH_CLASS permet de retourner des enregistrements sous forme d'objets de la classe spécifiée
-//        // ici : $this->nomClasseMetier contient "Enregistrement"
-//        // La classe Enregistrement est une classe générique vide qui sera automatiquement affublée d'autant
-//        // d'attributs publics qu'il y a de colonnes dans le jeu d'enregistrements
-//        $retour = $resultSet->fetchAll(PDO::FETCH_CLASS, $this->nomClasseMetier);
-//        $this->deconnecter();
-//        return $retour;
-//    }
-//
-//    function getAllProf() {
-//        $pdo = $this->connecter();
-//        // Requête textuelle
-//        $query = "SELECT * FROM PERSONNE WHERE IDROLE=3";
-//        // Exécuter la requête
-//        $resultSet = $pdo->query($query);
-//        // FETCH_CLASS permet de retourner des enregistrements sous forme d'objets de la classe spécifiée
-//        // ici : $this->nomClasseMetier contient "Enregistrement"
-//        // La classe Enregistrement est une classe générique vide qui sera automatiquement affublée d'autant
-//        // d'attributs publics qu'il y a de colonnes dans le jeu d'enregistrements
-//        $retour = $resultSet->fetchAll(PDO::FETCH_CLASS, $this->nomClasseMetier);
-//        $this->deconnecter();
-//        return $retour;
-//    }
-//
-//    function getAllMaitreDeStage() {
-//        $pdo = $this->connecter();
-//        // Requête textuelle
-//        $query = "SELECT * FROM PERSONNE WHERE IDROLE=5";
-//        // Exécuter la requête
-//        $resultSet = $pdo->query($query);
-//        // FETCH_CLASS permet de retourner des enregistrements sous forme d'objets de la classe spécifiée
-//        // ici : $this->nomClasseMetier contient "Enregistrement"
-//        // La classe Enregistrement est une classe générique vide qui sera automatiquement affublée d'autant
-//        // d'attributs publics qu'il y a de colonnes dans le jeu d'enregistrements
-//        $retour = $resultSet->fetchAll(PDO::FETCH_CLASS, $this->nomClasseMetier);
-//        $this->deconnecter();
-//        return $retour;
-//    }
-//
-//    function getAllOrganisation() {
-//        $pdo = $this->connecter();
-//        // Requête textuelle
-//        $query = "SELECT * FROM ORGANISATION ORDER BY NOM_ORGANISATION";
-//        // Exécuter la requête
-//        $resultSet = $pdo->query($query);
-//        // FETCH_CLASS permet de retourner des enregistrements sous forme d'objets de la classe spécifiée
-//        // ici : $this->nomClasseMetier contient "Enregistrement"
-//        // La classe Enregistrement est une classe générique vide qui sera automatiquement affublée d'autant
-//        // d'attributs publics qu'il y a de colonnes dans le jeu d'enregistrements
-//        $retour = $resultSet->fetchAll(PDO::FETCH_CLASS, $this->nomClasseMetier);
-//        $this->deconnecter();
-//        return $retour;
-//    }
-//
-//    function getAllAnneesScolaire() {
-//        $pdo = $this->connecter();
-//        // Requête textuelle
-//        $query = "SELECT * FROM ANNEESCOL";
-//        // Exécuter la requête
-//        $resultSet = $pdo->query($query);
-//        // FETCH_CLASS permet de retourner des enregistrements sous forme d'objets de la classe spécifiée
-//        // ici : $this->nomClasseMetier contient "Enregistrement"
-//        // La classe Enregistrement est une classe générique vide qui sera automatiquement affublée d'autant
-//        // d'attributs publics qu'il y a de colonnes dans le jeu d'enregistrements
-//        $retour = $resultSet->fetchAll(PDO::FETCH_CLASS, $this->nomClasseMetier);
-//        $this->deconnecter();
-//        return $retour;
-//    }
 }
