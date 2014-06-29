@@ -11,7 +11,7 @@ class C_Utilisateur extends C_ControleurGenerique {
         // charger les coordonnées de l'utilisateur connecté depuis la BDD       
         $daoPers = new M_DaoPersonne();
         $daoPers->connecter();
-        $utilisateur = $daoPers->getOneByLoginLazy(MaSession::get('login'));
+        $utilisateur = $daoPers->getOneByLogin(MaSession::get('login'));
         $daoPers->deconnecter();
         $this->vue->ecrireDonnee('utilisateur', $utilisateur);
         // transmettre le login        
@@ -30,7 +30,7 @@ class C_Utilisateur extends C_ControleurGenerique {
         // charger les coordonnées de l'utilisateur connecté depuis la BDD       
         $daoPers = new M_DaoPersonne();
         $daoPers->connecter();
-        $utilisateur = $daoPers->getOneByLoginLazy(MaSession::get('login'));
+        $utilisateur = $daoPers->getOneByLogin(MaSession::get('login'));
         $daoPers->deconnecter();
         $this->vue->ecrireDonnee('utilisateur', $utilisateur);
         // transmettre le login        
@@ -52,7 +52,7 @@ class C_Utilisateur extends C_ControleurGenerique {
 
         // charger l'objet métier correspondant à l'utilisateur courant
 //        $utilisateur = $daoPers->getOneByLoginEager($id);
-        $utilisateur = $daoPers->getOneByIdEager($id);
+        $utilisateur = $daoPers->getOneById($id);
 //        var_dump($utilisateur);
         // mettre à jour l'objet métier d'après le formilaire de saisie
         $utilisateur->setCivilite($_POST["civilite"]);
