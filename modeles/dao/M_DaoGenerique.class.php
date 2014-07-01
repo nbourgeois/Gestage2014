@@ -139,56 +139,7 @@ abstract class M_DaoGenerique {
      */
     abstract function update($idMetier, $objetMetier);
 
-//
-//    /**
-//     * update
-//     * Mise à jour d'un article
-//     * @param type $valeurClePrimaire (identifiant de la table)
-//     * @param type $tabChampsValeurs tableau associatif des couple (champ,valeur) à intégrer à la requête
-//     * @return boolean : succès/échec de la mise à jour
-//     */
-//    function update($valeurClePrimaire, $tabChampsValeurs) {
-//        // Construction de la requête textuelle
-//        $query = "UPDATE " . $this->nomTable . " SET ";
-//        $tabValeurs = array();   // tableau des valeurs à construire pour l'exécution de la requête
-//        $numParam = 0;              // on compte les paramètres : le premier n'est pas précédé d'une virgule
-//        foreach ($tabChampsValeurs as $champ => $valeur) {
-//            if ($numParam != 0) {
-//                $query.= ", ";
-//            }
-//            $query.= $champ . " = ? ";  // ajout d'une clause du type champ = ?
-//            $tabValeurs[] = $valeur; // mémorisation de la valeur
-//            $numParam++;
-//        }
-//        // Clause de restriction
-//        $query.= " WHERE $this->nomClefPrimaire = ? ";
-//        $tabValeurs[] = $valeurClePrimaire;
-//        $queryPrepare = $this->pdo->prepare($query);
-//        // Exécution de la requête
-//        $retour = $queryPrepare->execute($tabValeurs);
-//        return $retour;
-//    }
-//
-//
-//    /**
-//     * insert
-//     * ajouter un enregistrement dans la table 
-//     * @param type $tabValeurs : tableau indexé des valeurs à intégrer à la requête (sans l'identifiant)
-//     * @return boolean : succès/échec de l'insertion
-//     */
-//    function insert($tabValeurs) {
-//        $query = "INSERT INTO " . $this->nomTable . " VALUES ( null";
-//        // Pour chaque valeur à ajouter dans l'enregistrement, insérer un ?
-//        for ($i = 0; $i < count($tabValeurs); $i++) {
-//            $query.= ",?";
-//        }
-//        $query.= " ) ";
-//
-//        $queryPrepare = $this->pdo->prepare($query);
-//        $retour = $queryPrepare->execute($tabValeurs);
-//        return $retour;
-//    }
-//
+
     // ACCESSEURS et MUTATEURS
     public function getPdo() {
         return $this->pdo;
