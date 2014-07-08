@@ -2,6 +2,7 @@
 <!-- Constantes globales  de includes/version.inc.php -->
 <!-- loginAuthentification : login si authentification ok -->
 <!-- listeCateg : tableau de <Enregistrement> avec les champs 'cat_code' et 'cat_libelle' -->
+
 <div id="gauche">
     <ul class="menugauche">
         <p><h2>Menu</h2></p><p class="note">
@@ -19,7 +20,7 @@
         if (!is_null($this->lireDonnee('loginAuthentification')) && MaSession::get('role') == 1) {
             //ajout menu de gauche pour l'administrateur
             echo "<hr>";
-            echo "<li><a href=\".?controleur=administrateur&action=creerUtilisateur\">-Cr&eacute;er un utilisateur</a></li>";
+            echo "<li><a href=\".?controleur=AdminPersonnes&action=creerUtilisateur\">-Cr&eacute;er un utilisateur</a></li>";
             echo "<li><a href=\".?controleur=administrateur&action=afficherEleve\">-Afficher tout les eleves</a></li>";
 //    echo "<li><a href=\".?controleur=administrateur&action=creerClasse\">-Cr&eacute;er une classe</a></li>";
             echo "<li><a href=\".?controleur=administrateur&action=creerUtilisateur&role=MaitreStage\">-Ajouter un maitre de stage</a></li>";

@@ -2,8 +2,6 @@
 
 class M_DaoPersonne extends M_DaoGenerique {
 
-//    protected $valeurLogin = '$_SESSION["auth"]["login"]';
-
     function __construct() {
         $this->nomTable = "PERSONNE";
         $this->nomClefPrimaire = "IDPERSONNE";
@@ -19,11 +17,15 @@ class M_DaoPersonne extends M_DaoGenerique {
         // on instancie les objets Role et Specialite s'il y a lieu
         $leRole = null;
         if (isset($enreg['LIBELLE'])) {
-            $leRole = new M_Role($enreg['IDROLE'], $enreg['RANG'], $enreg['LIBELLE']);
+            $daoRole = new M_DaoRole();
+            $daoRole->setPdo($this->pdo);
+            $leRole = $daoRole->getOneById($enreg['IDROLE']);
         }
         $laSpecialite = null;
         if (isset($enreg['LIBELLELONGSPECIALITE'])) {
-            $laSpecialite = new M_Specialite($enreg['IDSPECIALITE'], $enreg['LIBELLECOURTSPECIALITE'], $enreg['LIBELLELONGSPECIALITE']);
+            $daoSpe = new M_DaoSpecialite();
+            $daoSpe->setPdo($this->pdo);
+            $laSpecialite = $daoSpe->getOneById($enreg['IDSPECIALITE']);
         }
         // on construit l'objet Personne 
         $retour = new M_Personne(
@@ -229,4 +231,4 @@ class M_DaoPersonne extends M_DaoGenerique {
 
 }
 
-?>
+
