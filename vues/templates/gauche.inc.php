@@ -20,7 +20,7 @@
         if (!is_null($this->lireDonnee('loginAuthentification')) && MaSession::get('role') == 1) {
             //ajout menu de gauche pour l'administrateur
             echo "<hr>";
-            echo "<li><a href=\".?controleur=AdminPersonnes&action=creerUtilisateur\">-Cr&eacute;er un utilisateur</a></li>";
+            echo "<li><a href=\".?controleur=AdminPersonnes&action=creerPersonne\">-Cr&eacute;er une personne</a></li>";
             echo "<li><a href=\".?controleur=administrateur&action=afficherEleve\">-Afficher tout les eleves</a></li>";
 //    echo "<li><a href=\".?controleur=administrateur&action=creerClasse\">-Cr&eacute;er une classe</a></li>";
             echo "<li><a href=\".?controleur=administrateur&action=creerUtilisateur&role=MaitreStage\">-Ajouter un maitre de stage</a></li>";

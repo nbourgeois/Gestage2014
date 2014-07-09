@@ -25,7 +25,7 @@ function __autoload($classe) {
             $chemin = "../vues/";
             break;
         default :
-            $chemin = "../classes/";
+            $chemin = "../includes/classes/";
             break;
     }
     $chemin = $chemin . $classe . '.class.php';
