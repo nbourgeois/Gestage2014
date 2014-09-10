@@ -1,8 +1,6 @@
 ﻿<!-- VARIABLES NECESSAIRES -->
 <!-- Constantes globales  de includes/version.inc.php -->
 <!-- loginAuthentification : login si authentification ok -->
-<!-- listeCateg : tableau de <Enregistrement> avec les champs 'cat_code' et 'cat_libelle' -->
-
 <div id="gauche">
     <ul class="menugauche">
         <p><h2>Menu</h2></p><p class="note">
@@ -10,7 +8,7 @@
         <hr/>
         <?php
         if (!is_null($this->lireDonnee('loginAuthentification'))) {
-            echo "<h2>Partie " . $this->lireDonnee('loginAuthentification') . "</h2>";
+            echo "<h2>Utilisateur : <i>" . $this->lireDonnee('loginAuthentification') . "</i></h2>";
             //menu de gauche présent pour tous les utilisateurs
             echo "<li><a href=\".?controleur=utilisateur&action=coordonnees\">-Mes informations</a></li>";
             echo "<li><a href=\".?controleur=utilisateur&action=afficherEntreprise\">-Afficher les entreprises</a></li>";
@@ -21,9 +19,9 @@
             //ajout menu de gauche pour l'administrateur
             echo "<hr>";
             echo "<li><a href=\".?controleur=AdminPersonnes&action=creerPersonne\">-Cr&eacute;er une personne</a></li>";
-            echo "<li><a href=\".?controleur=administrateur&action=afficherEleve\">-Afficher tout les eleves</a></li>";
+            echo "<li><a href=\".?controleur=administrateur&action=afficherEleve\">-Afficher tous les &eacute;l&egrave;ves</a></li>";
 //    echo "<li><a href=\".?controleur=administrateur&action=creerClasse\">-Cr&eacute;er une classe</a></li>";
-            echo "<li><a href=\".?controleur=administrateur&action=creerUtilisateur&role=MaitreStage\">-Ajouter un maitre de stage</a></li>";
+            echo "<li><a href=\".?controleur=administrateur&action=creerUtilisateur&role=MaitreStage\">-Ajouter un ma&icirc;tre de stage</a></li>";
         }
         if (!is_null($this->lireDonnee('loginAuthentification')) && MaSession::get('role') != 2) {
             //ajout menu de gauche pour les utilisateurs autres que secrétaire

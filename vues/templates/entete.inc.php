@@ -9,7 +9,7 @@
             <a href=".?controleur=connexion&action=seDeconnecter">
                 <img src="../vues/images/exit.png" style="width:25px; height:25px;" alt="" />
             </a>
-        </span>';
+        </span>
 
         <?php
     }
